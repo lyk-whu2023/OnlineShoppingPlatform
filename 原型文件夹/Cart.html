@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="styles.css">
+<title>购物车</title>
+</head>
+<body>
+<div class="header-fixed">
+  <div class="container nav">
+    <div class="brand">Shop</div>
+    <div class="nav-actions">
+      <el-select placeholder="分类" style="width:160px"><el-option label="手机" value="phone"></el-option><el-option label="电脑" value="pc"></el-option><el-option label="家电" value="appliance"></el-option></el-select>
+      <el-input placeholder="搜索商品" style="width:360px"><el-button slot="append" type="primary" onclick="location.href='Product-List.html'">搜索</el-button></el-input>
+      <el-button onclick="location.href='Cart.html'">购物车</el-button>
+      <el-button onclick="location.href='User-Center.html'">个人中心</el-button>
+    </div>
+  </div>
+ </div>
+<div class="content">
+  <div class="container">
+    <el-table :data="items" style="width:100%" @selection-change="onSelChange">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column label="商品" width="120">
+        <template slot-scope="scope"><img :src="scope.row.img" style="width:120px;height:80px;object-fit:cover"></template>
+      </el-table-column>
+      <el-table-column label="名称" prop="name"></el-table-column>
+      <el-table-column label="单价" width="120">
+        <template slot-scope="scope">¥{{ scope.row.price.toFixed(2) }}</template>
+      </el-table-column>
+      <el-table-column label="数量" width="160">
+        <template slot-scope="scope"><el-input-number v-model="scope.row.qty" :min="1" :max="9"></el-input-number></template>
+      </el-table-column>
+      <el-table-column label="小计" width="120">
+        <template slot-scope="scope">¥{{ (scope.row.price * scope.row.qty).toFixed(2) }}</template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
+        <template slot-scope="scope"><el-button type="danger" size="mini" @click="removeItem(scope.$index)">删除</el-button></template>
+      </el-table-column>
+    </el-table>
+    <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:16px;gap:16px">
+      <div>总价 ¥{{ total.toFixed(2) }}</div>
+      <el-button type="primary" @click="checkout">去结算</el-button>
+    </div>
+  </div>
+  <div class="footer">© 2025 Shop</div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+new Vue({
+  el:'body',
+  data:{
+    items:[
+      {name:'商品A',price:1999,qty:1,img:'https://picsum.photos/seed/cart1/120/80'},
+      {name:'商品B',price:2999,qty:2,img:'https://picsum.photos/seed/cart2/120/80'}
+    ],
+    selected:[]
+  },
+  computed:{
+    total(){
+      const rows = this.selected.length? this.selected : this.items;
+      return rows.reduce((sum,i)=>sum + i.price * i.qty,0)
+    }
+  },
+  methods:{
+    onSelChange(rows){this.selected = rows},
+    removeItem(i){this.items.splice(i,1)},
+    checkout(){if(!this.items.length){this.$message.warning('购物车为空');return;} window.location.href='Order-Submit.html'}
+  }
+})
+</script>
+</body>
+</html>

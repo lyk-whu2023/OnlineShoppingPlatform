@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="styles.css">
+<title>我的订单</title>
+</head>
+<body>
+<div class="header-fixed">
+  <div class="container nav">
+    <div class="brand">Shop</div>
+    <div class="nav-actions">
+      <el-select placeholder="分类" style="width:160px"><el-option label="手机" value="phone"></el-option><el-option label="电脑" value="pc"></el-option><el-option label="家电" value="appliance"></el-option></el-select>
+      <el-input placeholder="搜索商品" style="width:360px"><el-button slot="append" type="primary" onclick="location.href='Product-List.html'">搜索</el-button></el-input>
+      <el-button onclick="location.href='Cart.html'">购物车</el-button>
+      <el-button onclick="location.href='User-Center.html'">个人中心</el-button>
+    </div>
+  </div>
+ </div>
+<div class="content">
+  <div class="container">
+    <el-tabs value="all">
+      <el-tab-pane label="全部" name="all"></el-tab-pane>
+      <el-tab-pane label="待支付" name="pending"></el-tab-pane>
+      <el-tab-pane label="已支付" name="paid"></el-tab-pane>
+      <el-tab-pane label="已发货" name="shipped"></el-tab-pane>
+      <el-tab-pane label="已完成" name="done"></el-tab-pane>
+    </el-tabs>
+    <el-card style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>订单号 202511280001</div>
+        <div>
+          <span style="color:#F56C6C;margin-right:12px">¥2999</span>
+          <el-button type="primary">查看详情</el-button>
+        </div>
+      </div>
+    </el-card>
+  </div>
+  <div class="footer">© 2025 Shop</div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>new Vue({el:'body'})</script>
+</body>
+</html>
