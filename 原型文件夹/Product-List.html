@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="styles.css">
+<title>商品列表</title>
+</head>
+<body>
+<div class="header-fixed">
+  <div class="container nav">
+    <div class="brand">Shop</div>
+    <div class="nav-actions">
+      <el-select v-model="filter.category" placeholder="分类" style="width:160px"><el-option label="全部" value=""></el-option><el-option label="手机" value="phone"></el-option><el-option label="电脑" value="pc"></el-option><el-option label="家电" value="appliance"></el-option></el-select>
+      <el-input v-model="filter.keyword" placeholder="关键词" style="width:360px"><el-button slot="append" type="primary" @click="applySearch">搜索</el-button></el-input>
+      <el-button onclick="location.href='Cart.html'">购物车</el-button>
+      <el-button onclick="location.href='User-Center.html'">个人中心</el-button>
+    </div>
+  </div>
+ </div>
+<div class="content">
+  <div class="container">
+    <div style="display:flex;gap:24px">
+      <div class="aside">
+        <el-menu default-active="1">
+          <el-menu-item index="1">手机</el-menu-item>
+          <el-menu-item index="2">电脑</el-menu-item>
+          <el-menu-item index="3">家电</el-menu-item>
+        </el-menu>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;gap:16px;margin-bottom:16px">
+          <el-input v-model.number="filter.min" placeholder="最低价" style="width:120px"></el-input>
+          <el-input v-model.number="filter.max" placeholder="最高价" style="width:120px"></el-input>
+          <el-select v-model="filter.sort" placeholder="排序" style="width:160px"><el-option label="综合" value="mix"></el-option><el-option label="销量优先" value="sales"></el-option><el-option label="价格升序" value="price_asc"></el-option><el-option label="价格降序" value="price_desc"></el-option></el-select>
+        </div>
+        <div class="grid">
+          <el-card v-for="p in pageItems" :key="p.id" class="card">
+            <img :src="p.img" style="width:100%;height:240px;object-fit:cover">
+            <div style="padding:12px">{{ p.name }} <span style="float:right;color:#F56C6C">¥{{ p.price }}</span></div>
+            <div class="table-actions"><el-button type="primary" @click="buy(p)">购买</el-button><el-button @click="detail(p)">详情</el-button></div>
+          </el-card>
+        </div>
+        <div class="pagination-center"><el-pagination layout="prev, pager, next" :total="filtered.length" :page-size="pageSize" @current-change="onPage"></el-pagination></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">© 2025 Shop</div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+new Vue({
+  el:'body',
+  data:{
+    filter:{keyword:'',category:'',min:'',max:'',sort:'mix'},
+    products:[
+      {id:1,name:'旗舰手机 X',price:3999,category:'phone',img:'https://picsum.photos/seed/l1/640/360',sales:100},
+      {id:2,name:'轻薄本 Pro',price:5999,category:'pc',img:'https://picsum.photos/seed/l2/640/360',sales:80},
+      {id:3,name:'入门手机 A',price:999,category:'phone',img:'https://picsum.photos/seed/l3/640/360',sales:120},
+      {id:4,name:'智能电视 55"',price:2999,category:'appliance',img:'https://picsum.photos/seed/l4/640/360',sales:60},
+      {id:5,name:'游戏本 Z',price:7999,category:'pc',img:'https://picsum.photos/seed/l5/640/360',sales:50},
+      {id:6,name:'扫地机器人',price:1999,category:'appliance',img:'https://picsum.photos/seed/l6/640/360',sales:40}
+    ],
+    page:1,
+    pageSize:8
+  },
+  computed:{
+    filtered(){
+      let arr = this.products.filter(p=>{
+        const kw = this.filter.keyword.trim();
+        const okKw = kw? p.name.includes(kw): true;
+        const okCat = this.filter.category? p.category===this.filter.category: true;
+        const okMin = this.filter.min!==''? p.price>=Number(this.filter.min): true;
+        const okMax = this.filter.max!==''? p.price<=Number(this.filter.max): true;
+        return okKw && okCat && okMin && okMax;
+      });
+      if(this.filter.sort==='price_asc') arr.sort((a,b)=>a.price-b.price);
+      else if(this.filter.sort==='price_desc') arr.sort((a,b)=>b.price-a.price);
+      else if(this.filter.sort==='sales') arr.sort((a,b)=>b.sales-a.sales);
+      return arr;
+    },
+    pageItems(){
+      const start = (this.page-1)*this.pageSize;
+      return this.filtered.slice(start,start+this.pageSize);
+    }
+  },
+  methods:{
+    onPage(p){this.page=p},
+    buy(p){this.$message.success('已加入购物车: '+p.name)},
+    detail(p){window.location.href='Product-Detail.html'},
+    applySearch(){this.page=1}
+  }
+})
+</script>
+</body>
+</html>

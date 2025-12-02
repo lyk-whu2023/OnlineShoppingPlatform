@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="styles.css">
+<title>数据统计</title>
+</head>
+<body>
+<div class="admin-shell">
+  <div class="admin-header">
+    <div class="brand">Shop Admin</div>
+    <div class="nav-actions"></div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-sidebar">
+      <el-menu default-active="stats">
+        <el-menu-item index="dashboard"><a href="Admin-Dashboard.html">Dashboard</a></el-menu-item>
+        <el-menu-item index="products"><a href="Admin-Products.html">商品管理</a></el-menu-item>
+        <el-menu-item index="categories"><a href="Admin-Categories.html">分类管理</a></el-menu-item>
+        <el-menu-item index="users"><a href="Admin-Users.html">用户管理</a></el-menu-item>
+        <el-menu-item index="orders"><a href="Admin-Orders.html">订单管理</a></el-menu-item>
+        <el-menu-item index="stats"><a href="Admin-Stats.html">数据统计</a></el-menu-item>
+      </el-menu>
+    </div>
+    <div class="admin-main">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:12px"><el-select placeholder="时间范围" style="width:160px"><el-option label="近7天" value="7"></el-option><el-option label="近30天" value="30"></el-option></el-select><el-button>导出CSV</el-button></div>
+      <el-row :gutter="24">
+        <el-col :span="12"><el-card><div id="s1" class="chart"></div></el-card></el-col>
+        <el-col :span="12"><el-card><div id="s2" class="chart"></div></el-card></el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top:24px">
+        <el-col :span="12"><el-card><div id="s3" class="chart"></div></el-card></el-col>
+        <el-col :span="12"><el-card><div id="s4" class="chart"></div></el-card></el-col>
+      </el-row>
+      <div class="footer">© 2025 Shop Admin</div>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+<script>
+new Vue({el:'body',mounted:function(){var s1=echarts.init(document.getElementById('s1'));s1.setOption({xAxis:{type:'category',data:['1','2','3','4','5','6','7']},yAxis:{type:'value'},series:[{type:'line',data:[10,12,9,14,18,11,16]}]});var s2=echarts.init(document.getElementById('s2'));s2.setOption({xAxis:{type:'category',data:['A','B','C','D']},yAxis:{type:'value'},series:[{type:'bar',data:[1200,800,600,500]}]});var s3=echarts.init(document.getElementById('s3'));s3.setOption({xAxis:{type:'category',data:['1','2','3','4','5','6','7']},yAxis:{type:'value'},series:[{type:'line',data:[100,120,90,140,180,110,160]}]});var s4=echarts.init(document.getElementById('s4'));s4.setOption({xAxis:{type:'category',data:['Jan','Feb','Mar','Apr']},yAxis:{type:'value'},series:[{type:'line',data:[50,80,120,160]}]})}})
+</script>
+</body>
+</html>

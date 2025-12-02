@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="styles.css">
+<title>Dashboard</title>
+</head>
+<body>
+<div class="admin-shell">
+  <div class="admin-header">
+    <div class="brand">Shop Admin</div>
+    <div class="nav-actions">
+      <el-input placeholder="搜索..." style="width:240px"><el-button slot="append" icon="el-icon-search"></el-button></el-input>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-sidebar">
+      <el-menu default-active="dashboard">
+        <el-menu-item index="dashboard"><a href="Admin-Dashboard.html">Dashboard</a></el-menu-item>
+        <el-menu-item index="products"><a href="Admin-Products.html">商品管理</a></el-menu-item>
+        <el-menu-item index="categories"><a href="Admin-Categories.html">分类管理</a></el-menu-item>
+        <el-menu-item index="users"><a href="Admin-Users.html">用户管理</a></el-menu-item>
+        <el-menu-item index="orders"><a href="Admin-Orders.html">订单管理</a></el-menu-item>
+        <el-menu-item index="stats"><a href="Admin-Stats.html">数据统计</a></el-menu-item>
+      </el-menu>
+    </div>
+    <div class="admin-main">
+      <el-row :gutter="24">
+        <el-col :span="6"><el-card><div>订单数量 128</div></el-card></el-col>
+        <el-col :span="6"><el-card><div>用户数量 512</div></el-card></el-col>
+        <el-col :span="6"><el-card><div>待发货 15</div></el-card></el-col>
+        <el-col :span="6"><el-card><div>今日销售 ¥123456</div></el-card></el-col>
+      </el-row>
+      <el-row :gutter="24" style="margin-top:24px">
+        <el-col :span="12"><el-card><div id="chart1" class="chart"></div></el-card></el-col>
+        <el-col :span="12"><el-card><div id="chart2" class="chart"></div></el-card></el-col>
+      </el-row>
+      <div class="footer">© 2025 Shop Admin</div>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+<script>
+new Vue({el:'body',mounted:function(){var c1=echarts.init(document.getElementById('chart1'));c1.setOption({xAxis:{type:'category',data:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']},yAxis:{type:'value'},series:[{type:'line',data:[120,200,150,80,70,110,130]}]});var c2=echarts.init(document.getElementById('chart2'));c2.setOption({xAxis:{type:'category',data:['A','B','C','D']},yAxis:{type:'value'},series:[{type:'bar',data:[5,20,36,10]}]})}})
+</script>
+</body>
+</html>

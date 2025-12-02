@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <title>静态原型 Demo</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="header-fixed">
+        <div class="container nav">
+          <div style="display: flex; align-items: center; gap: 16px">
+            <div class="brand">Shop</div>
+            <el-breadcrumb separator="/" style="margin-left: 16px">
+              <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
+              <el-breadcrumb-item>{{ breadcrumb }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <el-link :underline="false" @click="$router.push('/')">
+              用户端
+            </el-link>
+            <el-link :underline="false" @click="$router.push('/admin')">
+              管理端
+            </el-link>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <router-view></router-view>
+      </div>
+      <div class="footer">© 2025 Shop Demo</div>
+    </div>
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+    <script src="assets/js/store.js"></script>
+    <script src="assets/js/pages/home.js"></script>
+    <script src="assets/js/pages/product-list.js"></script>
+    <script src="assets/js/pages/product-detail.js"></script>
+    <script src="assets/js/pages/auth.js"></script>
+    <script src="assets/js/pages/cart.js"></script>
+    <script src="assets/js/pages/order-submit.js"></script>
+    <script src="assets/js/pages/order-list.js"></script>
+    <script src="assets/js/pages/order-detail.js"></script>
+    <script src="assets/js/pages/user-center.js"></script>
+    <script src="assets/js/pages/address.js"></script>
+    <script src="assets/js/admin/login.js"></script>
+    <script src="assets/js/admin/layout.js"></script>
+    <script src="assets/js/admin/dashboard.js"></script>
+    <script src="assets/js/admin/products.js"></script>
+    <script src="assets/js/admin/categories.js"></script>
+    <script src="assets/js/admin/users.js"></script>
+    <script src="assets/js/admin/orders.js"></script>
+    <script src="assets/js/admin/stats.js"></script>
+    <script src="assets/js/router.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
