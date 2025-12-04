@@ -1,3 +1,5 @@
+Use onlineshoppingplatformdata;
+
 BEGIN;
 INSERT INTO categories (id, name) VALUES
 (1,'手机'),(2,'电脑'),(3,'家电'),(4,'周边'),(5,'服饰'),(6,'美妆'),
