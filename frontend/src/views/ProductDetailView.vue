@@ -15,7 +15,7 @@
         <div class="desc">{{ p && p.description }}</div>
         <el-input-number v-model="num" :min="1" :max="5" />
         <div class="actions">
-          <el-button type="primary">加入购物车</el-button>
+          <el-button type="primary" @click="add">加入购物车</el-button>
           <el-button type="success" @click="$router.push('/order/submit')">立即购买</el-button>
         </div>
       </div>
@@ -27,6 +27,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProduct } from '../api/products'
+import { addCartItem } from '../api/cart'
+import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 const p = ref(null)
@@ -47,6 +49,16 @@ onMounted(async () => {
 
 function url(seed) {
   return 'https://picsum.photos/seed/' + seed + '/720/360'
+}
+
+async function add() {
+  if (!p.value || !p.value.id) return
+  try {
+    await addCartItem({ productId: p.value.id, qty: num.value })
+    ElMessage.success('已加入购物车')
+  } catch (e) {
+    ElMessage.error(String(e.message || '加入购物车失败'))
+  }
 }
 </script>
 

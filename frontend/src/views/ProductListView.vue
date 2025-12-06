@@ -7,8 +7,8 @@
         </el-select>
         <el-input v-model="q.keyword" placeholder="关键词" style="width:240px" />
         <el-select v-model="q.sort" placeholder="排序" style="width:160px">
-          <el-option label="价格升序" value="price_asc" />
-          <el-option label="价格降序" value="price_desc" />
+          <el-option label="价格升序" value="priceAsc" />
+          <el-option label="价格降序" value="priceDesc" />
           <el-option label="销量优先" value="sales" />
         </el-select>
         <el-button type="primary" @click="load">搜索</el-button>
@@ -47,7 +47,9 @@ onMounted(async () => {
 
 async function load() {
   try {
-    const res = await getProducts(q)
+    const params = { ...q }
+    if (params.sort === 'sales') delete params.sort
+    const res = await getProducts(params)
     list.value = res.list || []
     total.value = res.total || 0
   } catch (e) {

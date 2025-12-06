@@ -20,17 +20,18 @@
         <el-form-item label="分类名">
           <el-input v-model="form.name" />
         </el-form-item>
-        <template #footer>
-          <el-button @click="visible=false">取消</el-button>
-          <el-button type="primary" @click="save">保存</el-button>
-        </template>
       </el-form>
+      <template #footer>
+        <el-button @click="visible=false">取消</el-button>
+        <el-button type="primary" @click="save">确认</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categories'
 
 const rows = ref([])
@@ -42,8 +43,30 @@ onMounted(load)
 async function load() { try { rows.value = await getCategories() } catch (e) { rows.value = [] } }
 function openAdd() { form.value = { id: null, name: '' }; visible.value = true }
 function edit(row) { form.value = { ...row }; visible.value = true }
-async function save() { try { if (form.value.id) { await updateCategory(form.value.id, form.value) } else { await createCategory(form.value) } } finally { visible.value = false; await load() } }
-async function del(id) { try { await deleteCategory(id) } finally { await load() } }
+async function save() {
+  try {
+    if (form.value.id) {
+      await updateCategory(form.value.id, form.value)
+      ElMessage.success('更新成功')
+    } else {
+      await createCategory(form.value)
+      ElMessage.success('创建成功')
+    }
+  } finally {
+    visible.value = false
+    await load()
+  }
+}
+async function del(id) {
+  try {
+    await ElMessageBox.confirm('确认删除该分类？', '提示', { type: 'warning' })
+    await deleteCategory(id)
+    ElMessage.success('删除成功')
+  } catch (e) {
+  } finally {
+    await load()
+  }
+}
 </script>
 
 <style scoped>

@@ -2,7 +2,7 @@ var AdminLayout = {
   template:
     '<div class=admin-shell>' +
     '<div class=admin-header>' +
-    '<div class=brand>Shop Admin</div>' +
+    '<div class=brand>商城后台</div>' +
     '<div class=nav-actions>' +
     '<el-input placeholder=搜索... style=width:240px>' +
     '<el-button slot=append icon=el-icon-search></el-button>' +
@@ -13,7 +13,7 @@ var AdminLayout = {
     '<div class=admin-sidebar>' +
     '<el-menu :default-active="$route.path">' +
     '<el-menu-item index="/admin" @click="$router.push(\'/admin\')">' +
-    'Dashboard</el-menu-item>' +
+    '后台首页</el-menu-item>' +
     '<el-menu-item index="/admin/products" ' +
     '@click="$router.push(\'/admin/products\')">商品管理</el-menu-item>' +
     '<el-menu-item index="/admin/categories" ' +
@@ -28,7 +28,7 @@ var AdminLayout = {
     '</div>' +
     '<div class=admin-main>' +
     '<router-view></router-view>' +
-    '<div class=footer>© 2025 Shop Admin</div>' +
+    '<div class=footer>© 2025 商城后台</div>' +
     '</div>' +
     '</div>' +
     '</div>'

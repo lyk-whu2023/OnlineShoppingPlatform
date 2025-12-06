@@ -37,16 +37,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getAddresses, createAddress, updateAddress, deleteAddress } from '../api/addresses'
 
 const rows = ref([])
 const visible = ref(false)
 const form = ref({ id: null, name: '', phone: '', detail: '' })
 
+async function load() { rows.value = await getAddresses() }
+onMounted(load)
+
 function openAdd() { form.value = { id: null, name: '', phone: '', detail: '' }; visible.value = true }
 function edit(row) { form.value = { ...row }; visible.value = true }
-function save() { visible.value = false }
-function del(id) {}
+async function save() {
+  const data = { name: form.value.name, phone: form.value.phone, detail: form.value.detail, userId: Number(localStorage.getItem('userId')) }
+  if (!form.value.id) await createAddress(data)
+  else await updateAddress(form.value.id, data)
+  visible.value = false
+  await load()
+}
+async function del(id) { await deleteAddress(id); await load() }
 </script>
 
 <style scoped>

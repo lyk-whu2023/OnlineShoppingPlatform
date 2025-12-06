@@ -16,6 +16,9 @@ public interface OrderMapper {
     @Select("SELECT * FROM orders WHERE status=#{status} ORDER BY created_at DESC")
     List<Order> listByStatus(@Param("status") String status);
 
+    @Select("SELECT * FROM orders ORDER BY created_at DESC")
+    List<Order> listAll();
+
     @Insert("INSERT INTO orders(user_id,address_id,amount,status,consignee_name,consignee_phone,consignee_detail) VALUES(#{userId},#{addressId},#{amount},#{status},#{consigneeName},#{consigneePhone},#{consigneeDetail})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Order o);

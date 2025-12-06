@@ -43,17 +43,18 @@
         <el-form-item label="描述">
           <el-input type="textarea" v-model="form.description" />
         </el-form-item>
-        <template #footer>
-          <el-button @click="visible=false">取消</el-button>
-          <el-button type="primary" @click="save">保存</el-button>
-        </template>
       </el-form>
+      <template #footer>
+        <el-button @click="visible=false">取消</el-button>
+        <el-button type="primary" @click="save">确认</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../../api/products'
 import { getCategories } from '../../api/categories'
 
@@ -69,8 +70,30 @@ function img(p) { const seed = (p.images && p.images[0]) || ('p'+p.id); return '
 function catName(cid) { const c = cats.value.find(x => x.id == cid); return c ? c.name : '' }
 function openAdd() { form.value = { id: null, name: '', categoryId: null, price: 0, stock: 0, description: '' }; visible.value = true }
 function edit(row) { form.value = { ...row }; visible.value = true }
-async function save() { try { if (form.value.id) { await updateProduct(form.value.id, form.value) } else { await createProduct(form.value) } } finally { visible.value = false; await load() } }
-async function del(id) { try { await deleteProduct(id) } finally { await load() } }
+async function save() {
+  try {
+    if (form.value.id) {
+      await updateProduct(form.value.id, form.value)
+      ElMessage.success('更新成功')
+    } else {
+      await createProduct(form.value)
+      ElMessage.success('创建成功')
+    }
+  } finally {
+    visible.value = false
+    await load()
+  }
+}
+async function del(id) {
+  try {
+    await ElMessageBox.confirm('确认删除该商品？', '提示', { type: 'warning' })
+    await deleteProduct(id)
+    ElMessage.success('删除成功')
+  } catch (e) {
+  } finally {
+    await load()
+  }
+}
 </script>
 
 <style scoped>

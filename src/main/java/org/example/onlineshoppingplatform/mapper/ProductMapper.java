@@ -20,7 +20,7 @@ public interface ProductMapper {
     List<Product> findByPriceBetween(@Param("min") java.math.BigDecimal min,
                                      @Param("max") java.math.BigDecimal max);
 
-    @Insert("INSERT INTO products(name,category_id,price,stock,description,sales) VALUES(#{name},#{categoryId},#{price},#{stock},#{description},#{sales})")
+    @Insert("INSERT INTO products(name,category_id,price,stock,description,sales) VALUES(#{name},#{categoryId},#{price},COALESCE(#{stock},0),#{description},COALESCE(#{sales},0))")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Product p);
 
