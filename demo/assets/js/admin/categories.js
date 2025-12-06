@@ -1,4 +1,4 @@
-var AdminCategories = {
+ var AdminCategories = {
   template:
     '<div>' +
     '<div style=margin-bottom:12px>' +
