@@ -1,6 +1,7 @@
 package org.example.onlineshoppingplatform;
 
 import org.example.onlineshoppingplatform.controller.OrderController;
+import org.example.onlineshoppingplatform.dto.CartItemDTO;
 import org.example.onlineshoppingplatform.dto.OrderDTO;
 import org.example.onlineshoppingplatform.service.OrderService;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +34,11 @@ class OrderControllerTests {
             }
             @Override
             public void updateStatus(Long id, String status) {}
+            @Override
+            public OrderDTO createFromItems(Long userId, Long addressId, List<CartItemDTO> items) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'createFromItems'");
+            }
         };
 
         OrderController controller = new OrderController(stub);
