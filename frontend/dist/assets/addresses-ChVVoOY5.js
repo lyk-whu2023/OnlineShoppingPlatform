@@ -1,0 +1,1 @@
+import{h as s}from"./http-CBG7w8uf.js";function a(){return s.get("/addresses").then(e=>e.data)}function n(e){return s.post("/addresses",e).then(t=>t.data)}function u(e,t){return s.put(`/addresses/${e}`,t).then(d=>d.data)}function o(e){return s.delete(`/addresses/${e}`).then(t=>t.data)}export{n as c,o as d,a as g,u};
