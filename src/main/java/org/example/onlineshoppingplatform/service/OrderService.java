@@ -11,4 +11,5 @@ public interface OrderService {
     List<OrderDTO> listByStatus(String status);
     List<OrderDTO> listAll();
     void updateStatus(Long id, String status);
+    OrderDTO createFromItems(Long userId, Long addressId, java.util.List<org.example.onlineshoppingplatform.dto.CartItemDTO> items);
 }

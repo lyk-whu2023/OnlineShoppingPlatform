@@ -25,6 +25,9 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDTO create(AddressDTO dto) {
         Address a = toEntity(dto);
+        if (Boolean.TRUE.equals(a.getIsDefault()) && a.getUserId() != null) {
+            addressMapper.unsetDefaultByUserId(a.getUserId());
+        }
         addressMapper.insert(a);
         return toDTO(addressMapper.findById(a.getId()));
     }
@@ -36,7 +39,14 @@ public class AddressServiceImpl implements AddressService {
         a.setName(dto.getName());
         a.setPhone(dto.getPhone());
         a.setDetail(dto.getDetail());
-        a.setIsDefault(dto.getIsDefault());
+        if (Boolean.TRUE.equals(dto.getIsDefault())) {
+            if (a.getUserId() != null) {
+                addressMapper.unsetDefaultByUserId(a.getUserId());
+            }
+            a.setIsDefault(true);
+        } else if (dto.getIsDefault() != null) {
+            a.setIsDefault(dto.getIsDefault());
+        }
         addressMapper.update(a);
         return toDTO(addressMapper.findById(id));
     }
@@ -69,4 +79,3 @@ public class AddressServiceImpl implements AddressService {
         return a;
     }
 }
-

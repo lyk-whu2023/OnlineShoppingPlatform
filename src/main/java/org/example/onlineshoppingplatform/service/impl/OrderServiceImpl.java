@@ -83,10 +83,47 @@ public class OrderServiceImpl implements OrderService {
             oi.setOrderId(o.getId());
             orderItemMapper.insert(oi);
         }
-        cartItemMapper.clear(cart.getId());
         return getById(o.getId());
     }
 
+    @Override
+    @Transactional
+    public OrderDTO createFromItems(Long userId, Long addressId, java.util.List<org.example.onlineshoppingplatform.dto.CartItemDTO> itemsReq) {
+        Address addr = addressMapper.findById(addressId);
+        if (addr == null || !addr.getUserId().equals(userId)) return null;
+        if (itemsReq == null || itemsReq.isEmpty()) return null;
+        java.math.BigDecimal amount = java.math.BigDecimal.ZERO;
+        java.util.List<OrderItem> orderItems = new java.util.ArrayList<>();
+        for (var it : itemsReq) {
+            Product p = productMapper.findById(it.getProductId());
+            if (p == null) continue;
+            java.math.BigDecimal line = p.getPrice().multiply(java.math.BigDecimal.valueOf(it.getQty()));
+            amount = amount.add(line);
+            OrderItem oi = new OrderItem();
+            oi.setProductId(p.getId());
+            oi.setName(p.getName());
+            oi.setPrice(p.getPrice());
+            oi.setQty(it.getQty());
+            orderItems.add(oi);
+            p.setStock(p.getStock() - it.getQty());
+            p.setSales(p.getSales() + it.getQty());
+            productMapper.update(p);
+        }
+        Order o = new Order();
+        o.setUserId(userId);
+        o.setAddressId(addressId);
+        o.setAmount(amount);
+        o.setStatus("CREATED");
+        o.setConsigneeName(addr.getName());
+        o.setConsigneePhone(addr.getPhone());
+        o.setConsigneeDetail(addr.getDetail());
+        orderMapper.insert(o);
+        for (OrderItem oi : orderItems) {
+            oi.setOrderId(o.getId());
+            orderItemMapper.insert(oi);
+        }
+        return getById(o.getId());
+    }
     @Override
     public OrderDTO getById(Long id) {
         Order o = orderMapper.findById(id);

@@ -5,6 +5,10 @@ import org.example.onlineshoppingplatform.entity.Cart;
 import org.example.onlineshoppingplatform.entity.CartItem;
 import org.example.onlineshoppingplatform.mapper.CartItemMapper;
 import org.example.onlineshoppingplatform.mapper.CartMapper;
+import org.example.onlineshoppingplatform.mapper.ProductImageMapper;
+import org.example.onlineshoppingplatform.mapper.ProductMapper;
+import org.example.onlineshoppingplatform.entity.Product;
+import org.example.onlineshoppingplatform.entity.ProductImage;
 import org.example.onlineshoppingplatform.service.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +20,14 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
     private final CartMapper cartMapper;
     private final CartItemMapper cartItemMapper;
+    private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
 
-    public CartServiceImpl(CartMapper cartMapper, CartItemMapper cartItemMapper) {
+    public CartServiceImpl(CartMapper cartMapper, CartItemMapper cartItemMapper, ProductMapper productMapper, ProductImageMapper productImageMapper) {
         this.cartMapper = cartMapper;
         this.cartItemMapper = cartItemMapper;
+        this.productMapper = productMapper;
+        this.productImageMapper = productImageMapper;
     }
 
     private Cart ensureCart(Long userId) {
@@ -50,7 +58,7 @@ public class CartServiceImpl implements CartService {
             it.setQty(dto.getQty());
             cartItemMapper.insert(it);
         } else {
-            cartItemMapper.updateQty(existing.getId(), existing.getQty() + dto.getQty());
+            cartItemMapper.updateQty(existing.getId(), dto.getQty());
         }
         return getCartItems(userId);
     }
@@ -85,7 +93,16 @@ public class CartServiceImpl implements CartService {
         CartItemDTO dto = new CartItemDTO();
         dto.setProductId(it.getProductId());
         dto.setQty(it.getQty());
+        Product p = productMapper.findById(it.getProductId());
+        if (p != null) {
+            dto.setName(p.getName());
+            dto.setPrice(p.getPrice());
+        }
+        java.util.List<ProductImage> imgs = productImageMapper.listByProductId(it.getProductId());
+        if (imgs != null && !imgs.isEmpty()) {
+            String v = imgs.get(0).getImageUrl() != null ? imgs.get(0).getImageUrl() : imgs.get(0).getImageSeed();
+            dto.setImage(v);
+        }
         return dto;
     }
 }
-

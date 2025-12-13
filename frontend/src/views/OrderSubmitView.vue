@@ -16,16 +16,38 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getAddresses } from '../api/addresses'
-import { createOrder } from '../api/orders'
+import { createOrder, createOrderFromItems } from '../api/orders'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 const addresses = ref([])
 const addressId = ref(null)
 const order = ref(null)
+const router = useRouter()
 
-async function load() { addresses.value = await getAddresses() }
+async function load() { 
+  addresses.value = await getAddresses()
+  const d = addresses.value.find(a => a.isDefault)
+  if (d) addressId.value = d.id
+}
 onMounted(load)
 
-async function submit() { order.value = await createOrder(addressId.value) }
+async function submit() { 
+  try {
+    const raw = localStorage.getItem('pendingPurchase')
+    if (raw) {
+      const payload = JSON.parse(raw)
+      order.value = await createOrderFromItems(payload.items || [], addressId.value)
+      localStorage.removeItem('pendingPurchase')
+    } else {
+      order.value = await createOrder(addressId.value) 
+    }
+    ElMessage.success('订单提交成功')
+    if (order.value && order.value.id) router.push('/order/' + order.value.id)
+  } catch (e) {
+    ElMessage.error(String(e.message || '提交失败'))
+  }
+}
 </script>
 
 <style scoped>

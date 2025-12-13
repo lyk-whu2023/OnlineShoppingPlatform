@@ -61,7 +61,17 @@ async function load() {
 function page(p) { q.page = p; load() }
 
 function img(p) {
-  const seed = (p.images && p.images[0]) || ('p'+p.id)
+  const v = (p.images && p.images[0])
+  if (typeof v === 'string' && (/^https?:\/\//.test(v) || v.startsWith('data:'))) return v
+  const base = (() => {
+    const envBase = import.meta.env.VITE_API_BASE
+    if (envBase) return envBase
+    const { hostname, port } = window.location
+    if (port === '10001' || hostname === 'localhost') return 'http://localhost:10002/api'
+    return '/api'
+  })().replace(/\/api$/, '')
+  if (typeof v === 'string' && v.startsWith('/')) return base + v
+  const seed = v || ('p'+p.id)
   return 'https://picsum.photos/seed/' + seed + '/640/360'
 }
 </script>

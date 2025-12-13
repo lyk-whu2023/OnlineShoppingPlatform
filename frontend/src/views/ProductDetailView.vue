@@ -16,7 +16,7 @@
         <el-input-number v-model="num" :min="1" :max="5" />
         <div class="actions">
           <el-button type="primary" @click="add">加入购物车</el-button>
-          <el-button type="success" @click="$router.push('/order/submit')">立即购买</el-button>
+          <el-button type="success" @click="buyNow">立即购买</el-button>
         </div>
       </div>
     </div>
@@ -28,12 +28,14 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProduct } from '../api/products'
 import { addCartItem } from '../api/cart'
-import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const route = useRoute()
 const p = ref(null)
 const seeds = ref([])
 const num = ref(1)
+const router = useRouter()
 
 onMounted(async () => {
   const id = route.params.id
@@ -47,17 +49,40 @@ onMounted(async () => {
   }
 })
 
-function url(seed) {
+function url(v) {
+  if (typeof v === 'string' && (/^https?:\/\//.test(v) || v.startsWith('data:'))) return v
+  const base = (() => {
+    const envBase = import.meta.env.VITE_API_BASE
+    if (envBase) return envBase
+    const { hostname, port } = window.location
+    if (port === '10001' || hostname === 'localhost') return 'http://localhost:10002/api'
+    return '/api'
+  })().replace(/\/api$/, '')
+  if (typeof v === 'string' && v.startsWith('/')) return base + v
+  const seed = v || (p.value ? ('p'+p.value.id) : 'p1')
   return 'https://picsum.photos/seed/' + seed + '/720/360'
 }
 
 async function add() {
   if (!p.value || !p.value.id) return
   try {
+    await ElMessageBox.confirm('确认将该商品加入购物车？', '确认操作', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
     await addCartItem({ productId: p.value.id, qty: num.value })
     ElMessage.success('已加入购物车')
   } catch (e) {
-    ElMessage.error(String(e.message || '加入购物车失败'))
+    if (e && e !== 'cancel') ElMessage.error(String(e.message || '加入购物车失败'))
+  }
+}
+
+async function buyNow() {
+  if (!p.value || !p.value.id) return
+  try {
+    await ElMessageBox.confirm('确认立即购买该商品？', '确认操作', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
+    const pending = { items: [{ productId: p.value.id, qty: num.value }] }
+    localStorage.setItem('pendingPurchase', JSON.stringify(pending))
+    router.push('/order/submit')
+  } catch (e) {
+    if (e && e !== 'cancel') ElMessage.error(String(e.message || '立即购买失败'))
   }
 }
 </script>

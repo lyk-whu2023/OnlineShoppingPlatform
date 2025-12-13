@@ -16,3 +16,6 @@ export function updateOrderStatus(id, status) {
   return http.patch(`/orders/${id}/status`, { status }).then(r => r.data)
 }
 
+export function createOrderFromItems(items, addressId) {
+  return http.post('/orders/batch', { items, addressId }).then(r => r.data)
+}

@@ -20,6 +20,9 @@ public interface AddressMapper {
     @Update("UPDATE addresses SET name=#{name}, phone=#{phone}, detail=#{detail}, is_default=#{isDefault} WHERE id=#{id}")
     int update(Address a);
 
+    @Update("UPDATE addresses SET is_default=false WHERE user_id=#{userId}")
+    int unsetDefaultByUserId(@Param("userId") Long userId);
+
     @Delete("DELETE FROM addresses WHERE id=#{id}")
     int deleteById(@Param("id") Long id);
 }
