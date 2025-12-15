@@ -1,1 +1,0 @@
-import{h as a}from"./http-CBG7w8uf.js";function o(){return a.get("/categories").then(t=>t.data)}function g(t){return a.post("/categories",t).then(e=>e.data)}function s(t,e){return a.put(`/categories/${t}`,e).then(r=>r.data)}function u(t){return a.delete(`/categories/${t}`).then(e=>e.data)}export{g as c,u as d,o as g,s as u};

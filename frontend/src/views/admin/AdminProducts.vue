@@ -1,12 +1,15 @@
 <template>
   <div>
-    <div style="margin-bottom:12px">
+    <div style="margin-bottom:12px; display:flex; gap:12px; align-items:center">
+      <el-input v-model="keyword" placeholder="按商品名称搜索" style="width:260px" />
+      <el-button type="primary" @click="onSearch">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
       <el-button type="primary" @click="openAdd">新增商品</el-button>
     </div>
     <el-table :data="rows" style="width:100%">
       <el-table-column label="商品图" width="120">
         <template #default="scope">
-          <img :src="img(scope.row)" style="width:120px;height:80px;object-fit:cover" />
+          <img :src="img(scope.row)" style="width:120px;height:80px;object-fit:cover" loading="lazy" decoding="async" />
         </template>
       </el-table-column>
       <el-table-column label="名称" prop="name" />
@@ -24,6 +27,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div style="display:flex; justify-content:flex-end; margin-top:12px">
+      <el-pagination
+        background
+        layout="prev, pager, next, sizes, total"
+        :total="total"
+        :page-size="size"
+        :current-page="page"
+        @size-change="onSize"
+        @current-change="onPage"
+      />
+    </div>
     <el-dialog title="新增/编辑商品" v-model="visible" width="600px">
       <el-form label-width="100px">
         <el-form-item label="商品名称">
@@ -62,10 +76,27 @@ const rows = ref([])
 const visible = ref(false)
 const form = ref({ id: null, name: '', categoryId: null, price: 0, stock: 0, description: '' })
 const cats = ref([])
+const keyword = ref('')
+const page = ref(1)
+const size = ref(20)
+const total = ref(0)
 
 onMounted(async () => { await load(); try { cats.value = await getCategories() } catch (e) { cats.value = [] } })
 
-async function load() { try { const res = await getProducts({ page: 1, size: 100 }); rows.value = res.list || [] } catch (e) { rows.value = [] } }
+async function load() {
+  try {
+    const res = await getProducts({ page: page.value, size: size.value, keyword: keyword.value })
+    rows.value = res.list || []
+    total.value = res.total || rows.value.length
+  } catch (e) {
+    rows.value = []
+    total.value = 0
+  }
+}
+function onSearch() { page.value = 1; load() }
+function reset() { keyword.value = ''; page.value = 1; load() }
+function onSize(val) { size.value = val; page.value = 1; load() }
+function onPage(val) { page.value = val; load() }
 function img(p) { const seed = (p.images && p.images[0]) || ('p'+p.id); return 'https://picsum.photos/seed/' + seed + '/120/80' }
 function catName(cid) { const c = cats.value.find(x => x.id == cid); return c ? c.name : '' }
 function openAdd() { form.value = { id: null, name: '', categoryId: null, price: 0, stock: 0, description: '' }; visible.value = true }

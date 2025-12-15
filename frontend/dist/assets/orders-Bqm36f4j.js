@@ -1,1 +1,0 @@
-import{h as a}from"./http-CBG7w8uf.js";function n(t){return a.post("/orders",{addressId:t}).then(r=>r.data)}function d(t={}){return a.get("/orders",{params:t}).then(r=>r.data)}function o(t,r){return a.patch(`/orders/${t}/status`,{status:r}).then(e=>e.data)}export{n as c,d as l,o as u};

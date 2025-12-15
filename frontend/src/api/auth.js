@@ -26,6 +26,7 @@ export function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('userId')
   localStorage.removeItem('user')
-  return http.post('/auth/logout')
+  return http.post('/auth/logout').then(() => {
+    if (typeof window !== 'undefined' && window.location) window.location.reload()
+  })
 }
-

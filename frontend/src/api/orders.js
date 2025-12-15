@@ -12,6 +12,10 @@ export function listOrders(query = {}) {
   return http.get('/orders', { params: query }).then(r => r.data)
 }
 
+export function listOrdersAdmin(query = {}) {
+  return http.get('/orders/list-admin', { params: query }).then(r => r.data)
+}
+
 export function updateOrderStatus(id, status) {
   return http.patch(`/orders/${id}/status`, { status }).then(r => r.data)
 }

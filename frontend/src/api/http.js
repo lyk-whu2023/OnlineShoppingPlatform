@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router'
+import { ElMessage } from 'element-plus'
 
 const apiBase = (() => {
   const envBase = import.meta.env.VITE_API_BASE
@@ -25,6 +26,11 @@ http.interceptors.response.use(
     if (status === 401) {
       const path = window.location.pathname + window.location.search
       router.push({ path: '/login', query: { redirect: path } })
+    }
+    if (status === 403) {
+      ElMessage.error('无权限访问该资源')
+      const path = window.location.pathname + window.location.search
+      if (path.startsWith('/admin')) router.push({ path: '/admin/login' })
     }
     const msg = e && e.response && e.response.data && e.response.data.message ? e.response.data.message : '请求失败'
     return Promise.reject(new Error(msg))

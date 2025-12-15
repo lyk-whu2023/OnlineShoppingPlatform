@@ -26,8 +26,10 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
             try {
                 DecodedJWT jwt = jwtUtil.verify(token);
                 Long uid = jwt.getClaim("uid").asLong();
+                String role = jwt.getClaim("role").asString();
                 if (uid != null) {
                     request.setAttribute("userId", uid);
+                    if (role != null) request.setAttribute("role", role);
                     return true;
                 }
             } catch (Exception ignored) {

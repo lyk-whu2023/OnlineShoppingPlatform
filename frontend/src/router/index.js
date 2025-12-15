@@ -10,6 +10,7 @@ const UserCenterView = () => import('../views/UserCenterView.vue')
 const AddressView = () => import('../views/AddressView.vue')
 const OrderListView = () => import('../views/OrderListView.vue')
 const OrderDetailView = () => import('../views/OrderDetailView.vue')
+const FavoritesView = () => import('../views/FavoritesView.vue')
 const AdminLogin = () => import('../views/admin/AdminLogin.vue')
 const AdminLayout = () => import('../views/admin/AdminLayout.vue')
 const AdminProducts = () => import('../views/admin/AdminProducts.vue')
@@ -17,6 +18,7 @@ const AdminCategories = () => import('../views/admin/AdminCategories.vue')
 const AdminUsers = () => import('../views/admin/AdminUsers.vue')
 const AdminOrders = () => import('../views/admin/AdminOrders.vue')
 const AdminStats = () => import('../views/admin/AdminStats.vue')
+const AdminComments = () => import('../views/admin/AdminComments.vue')
 
 const routes = [
   { path: '/', component: HomeView },
@@ -29,6 +31,7 @@ const routes = [
   { path: '/user', component: UserCenterView, meta: { requiresAuth: true } },
   { path: '/user/address', component: AddressView, meta: { requiresAuth: true } },
   { path: '/user/orders', component: OrderListView, meta: { requiresAuth: true } },
+  { path: '/user/favorites', component: FavoritesView, meta: { requiresAuth: true } },
   { path: '/order/:id', component: OrderDetailView, meta: { requiresAuth: true } },
   { path: '/admin/login', component: AdminLogin },
   {
@@ -40,7 +43,8 @@ const routes = [
       { path: 'categories', component: AdminCategories, meta: { requiresAdmin: true } },
       { path: 'users', component: AdminUsers, meta: { requiresAdmin: true } },
       { path: 'orders', component: AdminOrders, meta: { requiresAdmin: true } },
-      { path: 'stats', component: AdminStats, meta: { requiresAdmin: true } }
+      { path: 'stats', component: AdminStats, meta: { requiresAdmin: true } },
+      { path: 'comments', component: AdminComments, meta: { requiresAdmin: true } }
     ]
   }
 ]

@@ -19,6 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtAuthInterceptor)
                 .addPathPatterns("/api/cart/**", "/api/orders/**", "/api/users/me", "/api/users/me/**", "/api/addresses/**")
                 .excludePathPatterns("/api/auth/**", "/api/products/**", "/api/categories/**");
+        registry.addInterceptor(jwtAuthInterceptor)
+                .addPathPatterns("/api/categories/admin", "/api/users/admin", "/api/orders/admin");
     }
 
     @Override

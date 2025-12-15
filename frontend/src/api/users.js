@@ -8,6 +8,10 @@ export function listUsers() {
   return http.get('/users').then(r => r.data)
 }
 
+export function searchUsers(params) {
+  return http.get('/users/list-admin', { params }).then(r => r.data)
+}
+
 export function updateUserStatus(id, status) {
   return http.patch(`/users/${id}/status`, { status }).then(r => r.data)
 }

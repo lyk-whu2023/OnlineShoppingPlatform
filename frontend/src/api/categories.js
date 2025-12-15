@@ -4,6 +4,10 @@ export function getCategories() {
   return http.get('/categories').then(r => r.data)
 }
 
+export function searchCategories(params) {
+  return http.get('/categories/list-admin', { params }).then(r => r.data)
+}
+
 export function createCategory(data) {
   return http.post('/categories', data).then(r => r.data)
 }

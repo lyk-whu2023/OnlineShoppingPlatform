@@ -1,1 +1,0 @@
-import{_ as t,c as o,a as c,d as n,f as s}from"./index-DGdkDIp8.js";const a={},r={class:"container"};function _(d,i){const e=n("el-empty");return s(),o("div",r,[c(e,{description:"订单详情暂未接入后端"})])}const l=t(a,[["render",_],["__scopeId","data-v-d51e0303"]]);export{l as default};

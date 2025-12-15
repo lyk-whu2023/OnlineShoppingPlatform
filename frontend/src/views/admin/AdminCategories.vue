@@ -1,10 +1,13 @@
 <template>
   <div>
-    <div style="margin-bottom:12px">
+    <div style="margin-bottom:12px; display:flex; gap:12px; align-items:center">
+      <el-input v-model="keyword" placeholder="按分类名搜索" style="width:260px" />
+      <el-button type="primary" @click="onSearch">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
       <el-button type="primary" @click="openAdd">新增分类</el-button>
     </div>
     <el-table :data="rows" style="width:100%">
-      <el-table-column label="ID" width="120" prop="id" />
+      <el-table-column label="编号" width="120" prop="id" />
       <el-table-column label="分类名" prop="name" />
       <el-table-column label="操作" width="220">
         <template #default="scope">
@@ -15,6 +18,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div style="display:flex; justify-content:flex-end; margin-top:12px">
+      <el-pagination
+        background
+        layout="prev, pager, next, sizes, total"
+        :total="total"
+        :page-size="size"
+        :current-page="page"
+        @size-change="onSize"
+        @current-change="onPage"
+      />
+    </div>
     <el-dialog title="新增/编辑分类" v-model="visible" width="420px">
       <el-form label-width="100px">
         <el-form-item label="分类名">
@@ -32,15 +46,39 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categories'
+import { searchCategories, getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categories'
 
 const rows = ref([])
 const visible = ref(false)
 const form = ref({ id: null, name: '' })
+const keyword = ref('')
+const page = ref(1)
+const size = ref(20)
+const total = ref(0)
 
 onMounted(load)
 
-async function load() { try { rows.value = await getCategories() } catch (e) { rows.value = [] } }
+async function load() {
+  try {
+    const res = await searchCategories({ keyword: keyword.value, page: page.value, size: size.value })
+    rows.value = res.list || []
+    total.value = res.total || 0
+  } catch (e) {
+    try {
+      const all = await getCategories()
+      total.value = Array.isArray(all) ? all.length : 0
+      const start = (page.value - 1) * size.value
+      rows.value = (Array.isArray(all) ? all : []).filter(x => !keyword.value || (x.name||'').includes(keyword.value)).slice(start, start + size.value)
+    } catch {
+      rows.value = []
+      total.value = 0
+    }
+  }
+}
+function onSearch() { page.value = 1; load() }
+function reset() { keyword.value = ''; page.value = 1; load() }
+function onSize(val) { size.value = val; page.value = 1; load() }
+function onPage(val) { page.value = val; load() }
 function openAdd() { form.value = { id: null, name: '' }; visible.value = true }
 function edit(row) { form.value = { ...row }; visible.value = true }
 async function save() {

@@ -7,6 +7,7 @@
           <el-link @click="$router.push('/products')">商品</el-link>
           <el-link @click="$router.push('/cart')">购物车</el-link>
           <el-link @click="$router.push('/user')">个人中心</el-link>
+          <el-link @click="$router.push('/user/favorites')">收藏</el-link>
           <el-link v-if="isAdmin" @click="$router.push('/admin')">后台</el-link>
         </div>
       </div>
@@ -14,7 +15,7 @@
     <el-main>
       <router-view></router-view>
     </el-main>
-    <el-footer>© 2025 Online Shopping Platform</el-footer>
+    <el-footer>© 2025 在线商城</el-footer>
   </el-container>
 </template>
 

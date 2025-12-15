@@ -23,7 +23,7 @@ public class ProductController {
         List<ProductDTO> full = productService.list(query);
         Map<String, Object> resp = new HashMap<>();
         int page = query != null && query.getPage() != null ? query.getPage() : 1;
-        int size = query != null && query.getSize() != null ? query.getSize() : full.size();
+        int size = query != null && query.getSize() != null ? query.getSize() : 100;
         int from = Math.min((page - 1) * size, full.size());
         int to = Math.min(from + size, full.size());
         resp.put("list", full.subList(from, to));

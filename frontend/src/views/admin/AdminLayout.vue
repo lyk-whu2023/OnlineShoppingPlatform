@@ -19,6 +19,7 @@
           <el-menu-item index="/admin/users" @click="$router.push('/admin/users')">用户管理</el-menu-item>
           <el-menu-item index="/admin/orders" @click="$router.push('/admin/orders')">订单管理</el-menu-item>
           <el-menu-item index="/admin/stats" @click="$router.push('/admin/stats')">数据统计</el-menu-item>
+          <el-menu-item index="/admin/comments" @click="$router.push('/admin/comments')">评论管理</el-menu-item>
         </el-menu>
       </div>
       <div class="admin-main">

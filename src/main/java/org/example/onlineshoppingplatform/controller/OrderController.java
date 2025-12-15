@@ -4,7 +4,11 @@ import org.example.onlineshoppingplatform.dto.OrderDTO;
 import org.example.onlineshoppingplatform.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -53,6 +57,38 @@ public class OrderController {
         if (userId != null) return orderService.listByUser(userId);
         if (status != null) return orderService.listByStatus(status);
         return orderService.listAll();
+    }
+
+    @GetMapping("/admin")
+    public Map<String, Object> adminList(@RequestAttribute("role") String role,
+                                         @RequestParam(required = false) String status,
+                                         @RequestParam(required = false) String keyword,
+                                         @RequestParam(required = false) Integer page,
+                                         @RequestParam(required = false) Integer size) {
+        if (role == null || !"admin".equals(role)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "无管理员权限");
+        }
+        List<OrderDTO> full;
+        if (status != null && !status.isEmpty()) full = orderService.listByStatus(status);
+        else full = orderService.listAll();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String kw = keyword.trim();
+            full = full.stream().filter(o -> {
+                String idStr = o.getId() != null ? String.valueOf(o.getId()) : "";
+                String uidStr = o.getUserId() != null ? String.valueOf(o.getUserId()) : "";
+                return idStr.contains(kw) || uidStr.contains(kw);
+            }).toList();
+        }
+        int p = page != null ? page : 1;
+        int s = size != null ? size : 100;
+        int from = Math.min((p - 1) * s, full.size());
+        int to = Math.min(from + s, full.size());
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("list", full.subList(from, to));
+        resp.put("total", full.size());
+        resp.put("page", p);
+        resp.put("size", s);
+        return resp;
     }
 
     @PatchMapping("/{id}/status")
